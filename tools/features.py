@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from tqdm import tqdm
 
 time_slot = {
     'midnight': 0,
@@ -62,17 +61,17 @@ if __name__ == '__main__':
     pos_data = build_numpy_data('../data/positive.csv', random_sample=1)
     pos_label = np.array([1] * pos_data.shape[0])
 
-    print('Build positive data')
+    print('Build positive data:', pos_data.shape)
 
     neg1_data = build_numpy_data('../data/negative1.csv', random_sample=0.6)
     neg1_label = np.array([0] * neg1_data.shape[0])
 
-    print('Build negative 1 data')
+    print('Build negative 1 data:', neg1_data.shape)
 
-    neg2_data = build_numpy_data('../data/negative1.csv', random_sample=0.06)
+    neg2_data = build_numpy_data('../data/negative2.csv', random_sample=0.06)
     neg2_label = np.array([0] * neg2_data.shape[0])
 
-    print('Build negative 2 data')
+    print('Build negative 2 data:', neg2_data.shape)
 
     data = np.concatenate([pos_data, neg1_data, neg2_data], axis=0)
     label = np.concatenate([pos_label, neg1_label, neg2_label], axis=0)

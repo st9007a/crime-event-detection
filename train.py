@@ -8,6 +8,7 @@ if __name__ == '__main__':
 
     x = np.load('data/x.npy')
     y = np.load('data/y.npy')
+    print(x.shape)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.1, random_state=1)
     x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.2, random_state=1)
@@ -22,10 +23,12 @@ if __name__ == '__main__':
     clf.fit(
         x_train, y_train,
         eval_set=[(x_valid, y_valid)],
-        eval_metric='auc',
+        eval_metric='error',
         early_stopping_rounds=10
     )
 
     pred = clf.predict(x_test, ntree_limit=clf.best_ntree_limit)
-    pred = np.where(pred > 0.5, 1, 0)
+    print(pred.shape)
+    print(pred)
+
     print(classification_report(y_test, pred))
