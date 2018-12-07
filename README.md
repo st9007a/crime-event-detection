@@ -9,7 +9,7 @@
 `cd tools`
 `python3 make_positive.py`
 `python3 make_negative.py`
-`python3 features.py` # Need 5 minutes !
+`python3 features.py` # Need about 5 ~ 6 minutes
 `cd ..`
 
 ## Train

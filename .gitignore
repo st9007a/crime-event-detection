@@ -2,5 +2,6 @@ positive.csv
 negative1.csv
 negative2.csv
 *.npy
+*.pkl
 .venv
 __pycache__/
