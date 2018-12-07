@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from sklearn.preprocessing import LabelEncoder
 
 time_slot = {
@@ -15,6 +16,7 @@ time_slot = {
 
 selected_columns = ['Date', 'Time slot']
 weather = pd.read_csv('../data/Weather.csv', delimiter=',')
+weather = weather.set_index('datetime')
 
 def datetime_format_transform(datetime_str, input_form, output_form):
     date_obj = datetime.strptime(datetime_str, input_form)
@@ -35,24 +37,24 @@ def build_numpy_data(csv_file, random_sample=None):
 
     array = []
 
-    for idx, row in data[selected_columns].iterrows():
+    for idx, row in tqdm(data[selected_columns].iterrows()):
         date = row.iloc[0]
         date = datetime_format_transform(date, input_form='%m/%d/%Y %H:%M:%S', output_form='%Y-%m-%d %H:%M:%S')
 
         time = row.iloc[1]
         time = time_slot[time]
 
-        weather_info = weather.loc[weather['datetime'] == date].values
+        weather_info = weather.loc[date].values
         weather_info = np.reshape(weather_info, [-1])
 
-        if weather_info.shape[0] != 7:
+        if weather_info.shape[0] != 6:
             print('Date not found:', date)
             exit()
 
         array.append(np.append(weather_info, time))
 
     array = np.array(array)
-    array = np.delete(array, [0, 4], axis=1)
+    array = np.delete(array, [3], axis=1)
 
     return array
 
