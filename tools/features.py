@@ -14,7 +14,7 @@ time_slot = {
     'night': 3,
 }
 
-selected_columns = ['Date', 'Time slot']
+selected_columns = ['Date', 'Time slot', 'Latitude', 'Longitude']
 weather = pd.read_csv('../data/Weather.csv', delimiter=',')
 weather = weather.set_index('datetime')
 
@@ -59,6 +59,9 @@ def build_numpy_data(csv_file, random_sample=None):
 
         # Time slot as feature
         features = np.append(weather_info, time)
+
+        # geolocation as feature
+        features = np.append(features, [row.iloc[2], row.iloc[3]])
 
         # odd day or even day: for train test split
         dataset_id = dataset_select(date, '%Y-%m-%d %H:%M:%S')

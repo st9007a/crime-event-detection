@@ -17,16 +17,16 @@ if __name__ == '__main__':
     x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.2, random_state=1)
 
     clf = XGBClassifier(
-        max_depth=5,
-        learning_rate=0.1,
+        max_depth=8,
+        learning_rate=1,
         objective='binary:logistic',
-        n_estimators=100,
+        n_estimators=500,
     )
 
     clf.fit(
         x_train, y_train,
         eval_set=[(x_valid, y_valid)],
-        eval_metric='error',
+        eval_metric='auc',
         early_stopping_rounds=10
     )
 
