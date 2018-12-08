@@ -7,9 +7,9 @@ import numpy as np
 from tqdm import tqdm
 from sklearn.preprocessing import LabelEncoder
 
-from query.weather import Weather
-from query.timeinfo import Timeinfo
-from query.location import Location
+from lib.query.weather import Weather
+from lib.query.timeinfo import Timeinfo
+from lib.query.location import Location
 
 location = Location('../data/locCategory.csv')
 weather = Weather('../data/Weather.csv')
@@ -49,7 +49,6 @@ def build_numpy_data(csv_file, random_sample=None):
         location_features = location.query(lat, lon,
                                            query_list=['category'])
 
-        # features = np.concatenate([weather_features, time_features, location_features], axis=0)
         features = np.concatenate([weather_features, time_features, [lat, lon], location_features], axis=0)
 
         # odd day or even day: for train test split
