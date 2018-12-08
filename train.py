@@ -3,8 +3,16 @@ import pickle
 
 import numpy as np
 from xgboost import XGBClassifier
+from xgboost.callback import reset_learning_rate
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+
+curr_lr = 1
+def get_lr(boosting_round, num_boosting_rounds):
+    global curr_lr
+    curr_lr *= 0.99
+
+    return curr_lr
 
 if __name__ == '__main__':
 
@@ -27,7 +35,8 @@ if __name__ == '__main__':
         x_train, y_train,
         eval_set=[(x_valid, y_valid)],
         eval_metric='auc',
-        early_stopping_rounds=10
+        early_stopping_rounds=10,
+        callbacks=[reset_learning_rate(get_lr)]
     )
 
     print(clf.feature_importances_)
