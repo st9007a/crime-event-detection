@@ -15,6 +15,13 @@ with open('../data/positive.csv', newline='') as crimeFile:
     time_slot = {'midnight': '01:00:00','morning': '07:00:00', 'afternoon': '13:00:00', 'night': '19:00:00'}
     for row in rows:
         time_has_crime = {'midnight': False, 'morning': False, 'afternoon': False, 'night': False}
+        if len(row['Latitude']) < 9:
+            for i in range(len(row['Latitude']), 9):
+                row['Latitude'] = row['Latitude'] + '0'
+        if len(row['Longitude']) < 10:
+            for i in range(len(row['Longitude']), 10):
+                row['Longitude'] = row['Longitude'] + '0'
+        
         date_location = row['Date'][:5] + row['Latitude'][:9] + row['Longitude'][:10]
         if date_location not in has_crime:
             has_crime[date_location] = time_has_crime
@@ -43,6 +50,14 @@ with open('../data/positive.csv', newline='') as crimeFile:
     writer2.writeheader()
 
     for location in locations:
+        if len(row['Latitude']) < 9:
+            for i in range(len(row['Latitude']), 9):
+                row['Latitude'] = row['Latitude'] + '0'
+        if len(row['Longitude']) < 10:
+            for i in range(len(row['Longitude']), 10):
+                row['Longitude'] = row['Longitude'] + '0'
+        if (location['Latitude'] + location['Longitude']) in loc_has_crime:
+            continue
         loc_not_crime.add(location['Latitude'] + location['Longitude'])
 
     count = 0
@@ -55,7 +70,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
             writer2.writerow({
                 'Date': date + ' ' + time_slot[ran_time_slot[ran]],
                 'Latitude': location[:9],
-                'Longitude': location[9:],
+                'Longitude': location[9:19],
                 'Time slot': ran_time_slot[ran]
             })
             count += 1
