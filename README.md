@@ -15,3 +15,10 @@
 ## Train
 
 `python3 train.py`
+
+## Issues
+
+- Multiclass classification
+  - Merge some labels
+- Merge location categoryies
+ - reference: https://developer.foursquare.com/docs/resources/categories
