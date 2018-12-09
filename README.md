@@ -18,6 +18,7 @@
 
 ## Issues
 
+- Location category by grid map in `make_negative.py`
 - Multiclass classification
   - Merge some labels
 - Merge location categoryies
