@@ -11,7 +11,7 @@ def reset_grid_size(grid_size):
     global _l
     _l = Location(grid_size)
 
-def get(query_list, date, input_form, time_slot, lat, lon):
+def get(query_list, date, time_slot, lat, lon):
     w_query = []
     t_query = []
     l_query = []
@@ -29,8 +29,8 @@ def get(query_list, date, input_form, time_slot, lat, lon):
             print('Unknown query:', q)
             exit()
 
-    w_res = _w.query(date, input_form, w_query)
-    t_res = _t.query(date, input_form, time_slot, t_query)
+    w_res = _w.query(date, w_query)
+    t_res = _t.query(date, time_slot, t_query)
     l_res = _l.query(lat, lon, l_query)
 
     res = {**res, **{k: v for k, v in zip(w_query, w_res)}}

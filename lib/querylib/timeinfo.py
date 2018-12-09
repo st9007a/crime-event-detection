@@ -24,9 +24,8 @@ class Timeinfo():
             return 0
         return 1
 
-    def query(self, time_stamp, input_form, time_slot, query_list=[]):
+    def query(self, time_stamp, time_slot, query_list=[]):
         ret = []
-        time_stamp = datetime.strptime(time_stamp, input_form)
 
         for q in query_list:
             if q == 'time_slot':

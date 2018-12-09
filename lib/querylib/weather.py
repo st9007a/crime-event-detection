@@ -23,8 +23,7 @@ class Weather():
             'wind_speed': self.get_wind_speed,
         }
 
-    def datetime_format_transform(self, datetime_str, input_form):
-        date_obj = datetime.strptime(datetime_str, input_form)
+    def datetime_format_transform(self, date_obj):
 
         if date_obj.minute > 30 and (date_obj.month != 12 and date_obj.day != 31) or (date_obj.month == 1 and date_obj.day == 1):
             date_obj = date_obj + timedelta(hours=1)
@@ -46,8 +45,8 @@ class Weather():
     def get_wind_speed(self, df):
         return df['wind_speed']
 
-    def query(self, date_str, input_form, query_list=[]):
-        date = self.datetime_format_transform(date_str, input_form)
+    def query(self, date_obj, query_list=[]):
+        date = self.datetime_format_transform(date_obj)
         df = self.table.loc[date]
 
         return [self.handler[el](df) for el in query_list]
