@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
+import os
 from datetime import datetime, timedelta
 
 import numpy as np
 import pandas as pd
 
+_file_dir = os.path.dirname(os.path.realpath(__file__))
+
 class Weather():
 
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-    def __init__(self, csvfile):
-        self.table = pd.read_csv(csvfile, delimiter=',')
+    def __init__(self):
+        self.table = pd.read_csv('%s/Weather.csv' % _file_dir, delimiter=',')
         self.table = self.table.set_index('datetime')
 
         self.handler = {
@@ -51,4 +54,4 @@ class Weather():
 
 if __name__ == '__main__':
 
-    w = Weather('../../data/Weather.csv')
+    w = Weather()

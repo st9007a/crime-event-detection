@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 curr_lr = 1
+
 def get_lr(boosting_round, num_boosting_rounds):
     global curr_lr
     curr_lr *= 0.99
@@ -25,7 +26,7 @@ if __name__ == '__main__':
     x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.2, random_state=1)
 
     clf = XGBClassifier(
-        max_depth=8,
+        max_depth=5,
         learning_rate=1,
         objective='binary:logistic',
         n_estimators=500,
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         eval_set=[(x_valid, y_valid)],
         eval_metric='auc',
         early_stopping_rounds=10,
-        callbacks=[reset_learning_rate(get_lr)]
+        # callbacks=[reset_learning_rate(get_lr)]
     )
 
     print(clf.feature_importances_)

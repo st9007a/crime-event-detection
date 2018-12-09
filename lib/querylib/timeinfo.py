@@ -16,6 +16,7 @@ class Timeinfo():
 
         self.handler = {
             'is_holiday': self.get_is_holiday,
+            'time_slot': None,
         }
 
     def get_is_holiday(self, time_stamp):

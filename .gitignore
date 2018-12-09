@@ -4,4 +4,5 @@ negative2.csv
 *.npy
 *.pkl
 .venv
+*.txt
 __pycache__/

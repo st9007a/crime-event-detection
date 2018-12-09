@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 import math
+import os
 
 import numpy as np
 import pandas as pd
+
+_file_dir = os.path.dirname(os.path.realpath(__file__))
 
 def distance(lat1, lon1, lat2, lon2):
 
@@ -32,7 +35,7 @@ class Grid():
 
 class Location():
 
-    def __init__(self, csvfile, grid_size=1000):
+    def __init__(self, grid_size=1000):
 
         self.handler = {
             'category': self.get_category,
@@ -41,7 +44,7 @@ class Location():
         }
 
         self.grid_size = grid_size
-        self.build_grid_map(csvfile)
+        self.build_grid_map()
 
     def get_grid(self, lat, lon, return_near_grids=False):
         i_h = distance(lat, lon, self.min_lat, lon) // self.grid_size
@@ -86,8 +89,8 @@ class Location():
 
         return self.grids[idx], near_grids
 
-    def build_grid_map(self, csvfile):
-        self.table = pd.read_csv(csvfile, delimiter=',')
+    def build_grid_map(self):
+        self.table = pd.read_csv('%s/locCategory.csv' % _file_dir, delimiter=',')
         self.max_lat = -math.inf
         self.max_lon = -math.inf
         self.min_lat = math.inf
@@ -151,4 +154,4 @@ class Location():
 
 if __name__ == '__main__':
 
-    loc = Location('../../data/locCategory.csv')
+    loc = Location()
