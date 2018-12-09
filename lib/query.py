@@ -7,6 +7,17 @@ _w = Weather()
 _t = Timeinfo()
 _l = Location()
 
+FEATURE_COLUMNS = [
+    'humidity',
+    'pressure',
+    'temperature',
+    'wind_direction',
+    'wind_speed',
+    'time_slot',
+    'is_holiday',
+    'category',
+]
+
 def reset_grid_size(grid_size):
     global _l
     _l = Location(grid_size)

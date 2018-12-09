@@ -29,7 +29,7 @@ class Timeinfo():
 
         for q in query_list:
             if q == 'time_slot':
-                ret.append(self.time_slot[time_slot])
+                ret.append(self.time_slot[time_slot] if type(time_slot) == str else time_slot)
             else:
                 ret.append(self.handler[q](time_stamp))
 
