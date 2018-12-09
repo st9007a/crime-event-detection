@@ -6,4 +6,6 @@ negative2.csv
 .venv
 *.txt
 *_samples.csv
+*.swp
+*.xgb
 __pycache__/

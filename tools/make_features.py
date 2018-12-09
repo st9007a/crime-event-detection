@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
-import os
-import re
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import pandas as pd
-import numpy as np
 from tqdm import tqdm
-from sklearn.preprocessing import LabelEncoder
 
 import lib.query as Q
 from lib.label import get_label
@@ -41,28 +37,17 @@ def create_feature_csv(in_file, out_file, random_sample=None, selected_features=
 
 if __name__ == '__main__':
 
-    selected_features = [
-        'humidity',
-        'pressure',
-        'temperature',
-        'wind_direction',
-        'wind_speed',
-        'time_slot',
-        'is_holiday',
-        'category'
-    ]
-
     create_feature_csv('../data/positive.csv',
                        '../data/positive_samples.csv',
                        random_sample=1,
-                       selected_features=selected_features)
+                       selected_features=Q.FEATURE_COLUMNS)
 
     create_feature_csv('../data/negative1.csv',
                        '../data/negative1_samples.csv',
                        random_sample=0.6,
-                       selected_features=selected_features)
+                       selected_features=Q.FEATURE_COLUMNS)
 
     create_feature_csv('../data/negative2.csv',
                        '../data/negative2_samples.csv',
                        random_sample=0.06,
-                       selected_features=selected_features)
+                       selected_features=Q.FEATURE_COLUMNS)
