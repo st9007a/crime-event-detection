@@ -22,7 +22,7 @@ class Timeinfo():
     def get_is_holiday(self, time_stamp):
         if time_stamp.weekday() < 5:
             return 0
-        return [1]
+        return 1
 
     def query(self, time_stamp, time_slot, query_list=[]):
         ret = []
@@ -31,6 +31,6 @@ class Timeinfo():
             if q == 'time_slot':
                 ret.append(self.time_slot[time_slot] if type(time_slot) == str else time_slot)
             else:
-                ret.extend(self.handler[q](time_stamp))
+                ret.append(self.handler[q](time_stamp))
 
         return ret

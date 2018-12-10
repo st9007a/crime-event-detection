@@ -153,7 +153,7 @@ class Location():
 
         pois.sort(key=lambda x: x[0])
 
-        return [self.categories.index(pois[0][1])]
+        return self.categories.index(pois[0][1])
 
     def get_police_station_density(self, lat, lon):
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
@@ -163,7 +163,7 @@ class Location():
         for g in near_grids:
             num += g.get_nearest_police_station(lat, lon, max_distance=1000)
 
-        return [num]
+        return num
 
     def get_population_density(self, lat, lon):
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
@@ -174,15 +174,10 @@ class Location():
         for g in near_grids:
             pois.extend(g.get_nearest_poi(lat, lon, max_distance=1000))
 
-        return [len(pois)]
+        return len(pois)
 
     def query(self, lat, lon, query_list=[]):
-        ret = []
-
-        for q in query_list:
-            ret.extend(self.handler[el](lat, lon))
-
-        return ret
+        return [self.handler[el](lat, lon) for el in query_list]
 
 if __name__ == '__main__':
 
