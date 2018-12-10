@@ -12,7 +12,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
 
     has_crime = {}
     loc_has_crime = set()
-    time_slot = {'midnight': '01:00:00','morning': '07:00:00', 'afternoon': '13:00:00', 'night': '19:00:00'}
+    time_slot = {'midnight': '01:00:00', 'morning': '07:00:00', 'afternoon': '13:00:00', 'night': '19:00:00'}
     for row in rows:
         time_has_crime = {'midnight': False, 'morning': False, 'afternoon': False, 'night': False}
         row['Latitude'] = '%.6f' % (float(row['Latitude']))
@@ -21,7 +21,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
         if date_location not in has_crime:
             has_crime[date_location] = time_has_crime
             has_crime[date_location][row['Time slot']] = True
-            loc_has_crime.add(row['Latitude'][:9] + row['Longitude'][:10])
+            loc_has_crime.add(row['Latitude'][:6] + row['Longitude'][:7])
         else:
             has_crime[date_location][row['Time slot']] = True
     count = 0
@@ -47,7 +47,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
     for location in locations:
         row['Latitude'] = '%.6f' % (float(row['Latitude']))
         row['Longitude'] = '%.6f' % (float(row['Longitude']))
-        if (location['Latitude'] + location['Longitude']) in loc_has_crime:
+        if (location['Latitude'][:6] + location['Longitude'][:7]) in loc_has_crime:
             continue
         loc_not_crime.add(location['Latitude'] + location['Longitude'])
 
