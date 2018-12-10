@@ -8,11 +8,12 @@ from xgboost.callback import reset_learning_rate
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
-from lib.query import FEATURE_COLUMNS
+from lib.query import FEATURE_COLUMNS, UPDATE_COLUMNS
 from lib.label import NUM_LABELS
 
-feature_names = FEATURE_COLUMNS + ['lat', 'lon']
-# feature_names.remove('is_holiday')
+feature_names = FEATURE_COLUMNS + ['lat', 'lon'] + UPDATE_COLUMNS
+feature_names.remove('is_holiday')
+feature_names.remove('police_station_density')
 
 def get_all_features():
 
@@ -42,7 +43,10 @@ if __name__ == '__main__':
 
     params = {
         'max_depth': 8,
-        'eta': 1,
+        'eta': 0.1,
+        # 'objective': 'multi:softmax',
+        # 'num_class': NUM_LABELS,
+        # 'eval_metric': 'merror',
         'objective': 'binary:logistic',
         'eval_metric': 'error',
         'silent': 1,
@@ -50,7 +54,7 @@ if __name__ == '__main__':
 
     evallist = [(dvalid, 'eval')]
 
-    bst = xgb.train(params, dtrain, num_boost_round=500, evals=evallist, early_stopping_rounds=20)
+    bst = xgb.train(params, dtrain, num_boost_round=500, evals=evallist, early_stopping_rounds=10)
 
     pred = bst.predict(dtest, ntree_limit=bst.best_ntree_limit)
     pred = np.where(pred > 0.5, 1, 0)

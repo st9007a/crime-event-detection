@@ -11,7 +11,10 @@ FEATURE_COLUMNS = [
     'humidity', 'pressure', 'temperature', 'wind_direction', 'wind_speed', 'weather_description',
     'time_slot', 'is_holiday',
     'category',
-    # 'police_station_density', 'population_density',
+]
+
+UPDATE_COLUMNS = [
+    'police_station_density', 'population_density',
 ]
 
 def reset_grid_size(grid_size):

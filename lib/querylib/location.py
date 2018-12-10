@@ -103,11 +103,21 @@ class Location():
         self.min_lon = math.inf
         self.grids = []
         self.categories = set()
+        self.second_categories = set()
+        self.root_categories = set()
+        self.category_map = {}
 
         for idx, row in self.table.iterrows():
             lat = row.loc['Latitude']
             lon = row.loc['Longitude']
             self.categories.add(row.loc['Type'])
+            self.second_categories.add(row.loc['Second Type'])
+            self.root_categories.add(row.loc['Root Type'])
+
+            self.category_map[row.loc['Type']] = {
+                'second': row.loc['Second Type'],
+                'root': row.loc['Root Type'],
+            }
 
             if lat > self.max_lat:
                 self.max_lat = lat
@@ -120,6 +130,8 @@ class Location():
                 self.min_lon = lon
 
         self.categories = list(self.categories)
+        self.second_categories = list(self.second_categories)
+        self.root_categories = list(self.root_categories)
 
         self.h = distance(self.max_lat, self.min_lon, self.min_lat, self.min_lon) // self.grid_size + 1
         self.h = int(self.h)
@@ -154,6 +166,16 @@ class Location():
         pois.sort(key=lambda x: x[0])
 
         return self.categories.index(pois[0][1])
+
+    def get_parent_category(self, lat, lon):
+        num = self.get_category(lat, lon)
+
+        if num == len(self.categories):
+            return len(self.second_categories), len(self.root_categories)
+
+        c = self.categories[num]
+
+        return self.second_categories.index(self.category_map[c]['second']), self.root_categories.index(self.category_map[c]['root'])
 
     def get_police_station_density(self, lat, lon):
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
