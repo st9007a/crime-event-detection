@@ -4,7 +4,6 @@ negative2.csv
 *.npy
 *.pkl
 .venv
-*.txt
 *_samples.csv
 *.swp
 *.xgb
