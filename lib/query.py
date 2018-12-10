@@ -8,7 +8,7 @@ _t = Timeinfo()
 _l = Location()
 
 FEATURE_COLUMNS = [
-    'humidity', 'pressure', 'temperature', 'wind_direction', 'wind_speed',
+    'humidity', 'pressure', 'temperature', 'wind_direction', 'wind_speed', 'weather_description',
     'time_slot', 'is_holiday',
     'category',
     # 'police_station_density', 'population_density',

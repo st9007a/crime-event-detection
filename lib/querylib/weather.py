@@ -15,12 +15,15 @@ class Weather():
         self.table = pd.read_csv('%s/Weather.csv' % _file_dir, delimiter=',')
         self.table = self.table.set_index('datetime')
 
+        self.desc = list(set(self.table['weather_description']))
+
         self.handler = {
             'humidity': self.get_humidity,
             'pressure': self.get_pressure,
             'temperature': self.get_temperature,
             'wind_direction': self.get_wind_direction,
             'wind_speed': self.get_wind_speed,
+            'weather_description': self.get_weather_description,
         }
 
     def datetime_format_transform(self, date_obj):
@@ -29,6 +32,9 @@ class Weather():
             date_obj = date_obj + timedelta(hours=1)
 
         return date_obj.replace(minute=0, second=0).strftime(Weather.DATE_FORMAT)
+
+    def get_weather_description(self, df):
+        return self.desc.index(df['weather_description'])
 
     def get_humidity(self, df):
         return df['humidity']
