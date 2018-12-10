@@ -26,12 +26,18 @@ class Grid():
     def add(self, lat, lon, category):
         self.poi.append((lat, lon, category))
 
-    def get_nearest_poi(self, lat, lon, k=1):
+    def get_nearest_poi(self, lat, lon, max_distance=1000):
 
         candidate = [(distance(lat, lon, el[0], el[1]), el[2]) for el in self.poi]
-        candidate.sort(key=lambda x: x[0])
+        candidate = list(filter(lambda x: x[0] <= max_distance, candidate))
 
-        return candidate[:k]
+        return candidate
+
+    def get_nearest_police_station(self, lat, lon, max_distance=1000):
+        candidate = [(distance(lat, lon, el[0], el[1]), el[2]) for el in self.poi]
+        candidate = list(filter(lambda x: x[1] == 'Police Station' and x[0] <= max_distance, candidate))
+
+        return len(candidate)
 
 class Location():
 
@@ -39,8 +45,8 @@ class Location():
 
         self.handler = {
             'category': self.get_category,
-            # 'population_density': self.get_population_density,
-            # 'police_station_density': self.get_population_density,
+            'population_density': self.get_population_density,
+            'police_station_density': self.get_police_station_density,
         }
 
         self.grid_size = grid_size
@@ -90,7 +96,7 @@ class Location():
         return self.grids[idx], near_grids
 
     def build_grid_map(self):
-        self.table = pd.read_csv('%s/locCategory.csv' % _file_dir, delimiter=',')
+        self.table = pd.read_csv('%s/loc.csv' % _file_dir, delimiter=',')
         self.max_lat = -math.inf
         self.max_lon = -math.inf
         self.min_lat = math.inf
@@ -137,20 +143,46 @@ class Location():
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
         pois = []
 
-        pois.extend(grid.get_nearest_poi(lat, lon, k=1))
+        pois.extend(grid.get_nearest_poi(lat, lon, max_distance=100))
 
         for g in near_grids:
-            pois.extend(g.get_nearest_poi(lat, lon, k=1))
+            pois.extend(g.get_nearest_poi(lat, lon, max_distance=100))
 
-        if len(pois) == 0 or pois[0][0] > 100:
+        if len(pois) == 0:
             return len(self.categories)
 
         pois.sort(key=lambda x: x[0])
 
-        return self.categories.index(pois[0][1])
+        return [self.categories.index(pois[0][1])]
+
+    def get_police_station_density(self, lat, lon):
+        grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
+
+        num = grid.get_nearest_police_station(lat, lon, max_distance=1000)
+
+        for g in near_grids:
+            num += g.get_nearest_police_station(lat, lon, max_distance=1000)
+
+        return [num]
+
+    def get_population_density(self, lat, lon):
+        grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
+        pois = []
+
+        pois.extend(grid.get_nearest_poi(lat, lon, max_distance=1000))
+
+        for g in near_grids:
+            pois.extend(g.get_nearest_poi(lat, lon, max_distance=1000))
+
+        return [len(pois)]
 
     def query(self, lat, lon, query_list=[]):
-        return [self.handler[el](lat, lon) for el in query_list]
+        ret = []
+
+        for q in query_list:
+            ret.extend(self.handler[el](lat, lon))
+
+        return ret
 
 if __name__ == '__main__':
 

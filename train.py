@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import pickle
+from pprint import pprint
 
 import numpy as np
 import pandas as pd
@@ -12,6 +12,7 @@ from lib.query import FEATURE_COLUMNS
 from lib.label import NUM_LABELS
 
 feature_names = FEATURE_COLUMNS + ['lat', 'lon']
+# feature_names.remove('is_holiday')
 
 def get_all_features():
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     pred = bst.predict(dtest, ntree_limit=bst.best_ntree_limit)
     pred = np.where(pred > 0.5, 1, 0)
     print(pred.shape)
-    print(bst.get_score())
+    pprint(bst.get_score())
     print(classification_report(y_test, pred))
 
     bst.save_model('model.xgb')

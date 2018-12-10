@@ -9,9 +9,9 @@ _l = Location()
 
 FEATURE_COLUMNS = [
     'humidity', 'pressure', 'temperature', 'wind_direction', 'wind_speed',
-    'time_slot',
-    'is_holiday',
+    'time_slot', 'is_holiday',
     'category',
+    # 'police_station_density', 'population_density',
 ]
 
 def reset_grid_size(grid_size):
