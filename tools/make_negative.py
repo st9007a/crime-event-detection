@@ -45,8 +45,8 @@ with open('../data/positive.csv', newline='') as crimeFile:
     writer2.writeheader()
 
     for location in locations:
-        row['Latitude'] = '%.6f' % (float(row['Latitude']))
-        row['Longitude'] = '%.6f' % (float(row['Longitude']))
+        location['Latitude'] = '%.6f' % (float(location['Latitude']))
+        location['Longitude'] = '%.6f' % (float(location['Longitude']))
         if (location['Latitude'][:6] + location['Longitude'][:7]) in loc_has_crime:
             continue
         loc_not_crime.add(location['Latitude'] + location['Longitude'])
