@@ -21,5 +21,5 @@
 - Location category by grid map in `make_negative.py`
 - Multiclass classification
   - Merge some labels
-- Merge location categoryies
+- Merge location categories
  - reference: https://developer.foursquare.com/docs/resources/categories

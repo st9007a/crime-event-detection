@@ -142,7 +142,7 @@ class Location():
         for g in near_grids:
             pois.extend(g.get_nearest_poi(lat, lon, k=1))
 
-        if len(pois) == 0:
+        if len(pois) == 0 or pois[0][0] > 100:
             return len(self.categories)
 
         pois.sort(key=lambda x: x[0])
@@ -154,4 +154,5 @@ class Location():
 
 if __name__ == '__main__':
 
-    loc = Location()
+    print(distance(41.941562, -87.664011, 41.942562, -87.664011))
+    print(distance(41.941562, -87.664011, 41.941562, -87.665011))

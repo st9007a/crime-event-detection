@@ -49,5 +49,5 @@ if __name__ == '__main__':
 
     create_feature_csv('../data/negative2.csv',
                        '../data/negative2_samples.csv',
-                       random_sample=0.06,
+                       random_sample=0.25,
                        selected_features=Q.FEATURE_COLUMNS)
