@@ -9,7 +9,7 @@ for loc in locs:
         polices.append(loc)
 
 def nearby(police, loc):
-    if (abs(float(police['Latitude']) - float(loc['Latitude'])) <= 0.001 or abs(float(police['Longitude']) - float(loc['Longitude'])) <= 0.001):
+    if (abs(float(police['Latitude']) - float(loc['Latitude'])) <= 0.001 and abs(float(police['Longitude']) - float(loc['Longitude'])) <= 0.001):
         police['Amount'] += 1
 
 crimes = csv.DictReader(open('../data/Crimes2016.csv', newline=''))
