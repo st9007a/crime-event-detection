@@ -7,6 +7,14 @@ from tqdm import tqdm
 import lib.query as Q
 from lib.label import get_label
 
+def get_set_name(date):
+    if date.day % 4 == 0:
+        return 'test'
+    elif date.day % 4 == 2:
+        return 'valid'
+    return 'train'
+
+
 def create_feature_csv(in_file, out_file, random_sample=None, selected_features=[]):
     columns = ['date', 'set', 'lat', 'lon', 'label'] + selected_features
     raw_data = pd.read_csv(in_file, delimiter=',')
@@ -21,7 +29,7 @@ def create_feature_csv(in_file, out_file, random_sample=None, selected_features=
 
         row_data = [
             date,
-            'train' if date.day % 2 == 0 else 'test',
+            get_set_name(date),
             lat,
             lon,
             get_label(row['Primary Type']) if 'Primary Type' in row else 0
@@ -44,7 +52,7 @@ if __name__ == '__main__':
 
     create_feature_csv('../data/negative1.csv',
                        '../data/negative1_samples.csv',
-                       random_sample=0.6,
+                       random_sample=1,
                        selected_features=Q.FEATURE_COLUMNS)
 
     create_feature_csv('../data/negative2.csv',

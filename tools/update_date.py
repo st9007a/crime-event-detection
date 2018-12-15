@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from lib.querylib.location import Location
-
-l = Location()
-
 def update(csv_file):
-
-    data = pd.read_csv(csv_file, delimiter=',')
     new_data = []
-    columns = ['second_type', 'root_type']
+    data = pd.read_csv(csv_file, delimiter=',')
+    columns = ['month', 'hour']
 
     for idx, row in tqdm(data.iterrows()):
-        lat = row['lat']
-        lon = row['lon']
-
-        second, root = l.get_parent_category(lat, lon)
-        new_data.append([second, root])
+        date = datetime.strptime(row['date'], '%Y-%m-%d %H:%M:%S')
+        new_data.append([date.month, date.hour])
 
     df = pd.DataFrame(new_data, columns=columns)
     data = pd.concat([data, df], axis=1)
