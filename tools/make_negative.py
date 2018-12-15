@@ -43,7 +43,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
                             has_crime[date_location]['time_slot'][ts] = True
     # print(has_crime['01/0141.918-87.729'])
 
-    time_slot = {'midnight': range(1, 7), 'morning': range(7, 13), 'afternoon': range(13, 19), 'night': range(19, 25)}
+    time_slot = {'midnight': range(0, 6), 'morning': range(6, 12), 'afternoon': range(12, 18), 'night': range(18, 24)}
     for h in has_crime:
         for ts in has_crime[h]['time_slot']:
             if not has_crime[h]['time_slot'][ts]:
