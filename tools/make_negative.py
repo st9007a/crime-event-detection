@@ -78,7 +78,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
         for location in loc_not_crime:
             ran = random.randint(0, 3)
             writer2.writerow({
-                'Date': date + ' ' + time_slot[ran_time_slot[ran]],
+                'Date': date + ' ' + '%02d' % random.choice(time_slot[ran_time_slot[ran]]) + ':00:00',
                 'Latitude': location[:9],
                 'Longitude': location[9:19],
                 'Time slot': ran_time_slot[ran]
