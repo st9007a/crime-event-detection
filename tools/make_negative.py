@@ -12,7 +12,6 @@ with open('../data/positive.csv', newline='') as crimeFile:
 
     has_crime = {}
     loc_has_crime = set()
-    time_slot = {'midnight': '01:00:00', 'morning': '07:00:00', 'afternoon': '13:00:00', 'night': '19:00:00'}
     for row in rows:
         time_has_crime = {
             'location': {'Latitude': 0.0, 'Longitude': 0.0},
@@ -34,7 +33,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
     # print(has_crime['01/0141.918-87.729'])
 
     for key, crime in has_crime.items():
-        arr = [-2, -1, 0, 1, 2]
+        arr = range(-5, 6)
         for i in arr:
             for j in arr:
                 date_location = key[:5] + str(float(crime['location']['Latitude']) + i * 0.001)[:6] + str(float(crime['location']['Longitude']) + j * 0.001)[:7]
@@ -44,12 +43,13 @@ with open('../data/positive.csv', newline='') as crimeFile:
                             has_crime[date_location]['time_slot'][ts] = True
     # print(has_crime['01/0141.918-87.729'])
 
+    time_slot = {'midnight': range(1, 7), 'morning': range(7, 13), 'afternoon': range(13, 19), 'night': range(19, 25)}
     for h in has_crime:
         for ts in has_crime[h]['time_slot']:
             if not has_crime[h]['time_slot'][ts]:
                 count += 1
                 writer.writerow({
-                    'Date': h[:5] + '/2016 ' + time_slot[ts],
+                    'Date': h[:5] + '/2016 ' + '%02d' % random.choice(time_slot[ts]) + ':00:00',
                     'Latitude': has_crime[h]['location']['Latitude'],
                     'Longitude': has_crime[h]['location']['Longitude'],
                     'Time slot': ts
