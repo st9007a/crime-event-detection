@@ -26,10 +26,13 @@ class Grid():
     def add(self, lat, lon, category):
         self.poi.append((lat, lon, category))
 
-    def get_nearest_poi(self, lat, lon, max_distance=1000):
+    def get_nearest_poi(self, lat, lon, max_distance=1000, filter_fn=None):
 
         candidate = [(distance(lat, lon, el[0], el[1]), el[2]) for el in self.poi]
         candidate = list(filter(lambda x: x[0] <= max_distance, candidate))
+
+        if filter_fn is not None:
+            candidate = filter(filter_fn, candidate)
 
         return candidate
 
@@ -47,6 +50,7 @@ class Location():
             'category': self.get_category,
             'population_density': self.get_population_density,
             'police_station_density': self.get_police_station_density,
+            'night_spot_density': self.get_night_spot_density,
         }
 
         self.grid_size = grid_size
@@ -102,17 +106,23 @@ class Location():
         self.min_lat = math.inf
         self.min_lon = math.inf
         self.grids = []
-        self.categories = set()
-        self.second_categories = set()
-        self.root_categories = set()
+        self.categories = []
+        self.second_categories = []
+        self.root_categories = []
         self.category_map = {}
 
         for idx, row in self.table.iterrows():
             lat = row.loc['Latitude']
             lon = row.loc['Longitude']
-            self.categories.add(row.loc['Type'])
-            self.second_categories.add(row.loc['Second Type'])
-            self.root_categories.add(row.loc['Root Type'])
+
+            if row.loc['Type'] not in self.categories:
+                self.categories.append(row.loc['Type'])
+
+            if row.loc['Second Type'] not in self.second_categories:
+                self.second_categories.append(row.loc['Second Type'])
+
+            if row.loc['Root Type'] not in self.root_categories:
+                self.root_categories.append(row.loc['Root Type'])
 
             self.category_map[row.loc['Type']] = {
                 'second': row.loc['Second Type'],
@@ -128,10 +138,6 @@ class Location():
                 self.max_lon = lon
             elif lon < self.min_lon:
                 self.min_lon = lon
-
-        self.categories = list(self.categories)
-        self.second_categories = list(self.second_categories)
-        self.root_categories = list(self.root_categories)
 
         self.h = distance(self.max_lat, self.min_lon, self.min_lat, self.min_lon) // self.grid_size + 1
         self.h = int(self.h)
@@ -187,14 +193,29 @@ class Location():
 
         return num
 
+    def get_night_spot_density(self, lat, lon):
+
+        def filter_fn(el):
+            return self.category_map[el[1]]['root'] == 'Nightlife Spot'
+
+        grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
+        pois = []
+
+        pois.extend(grid.get_nearest_poi(lat, lon, max_distance=500, filter_fn=filter_fn))
+
+        for g in near_grids:
+            pois.extend(g.get_nearest_poi(lat, lon, max_distance=500, filter_fn=filter_fn))
+
+        return len(pois)
+
     def get_population_density(self, lat, lon):
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
         pois = []
 
-        pois.extend(grid.get_nearest_poi(lat, lon, max_distance=1000))
+        pois.extend(grid.get_nearest_poi(lat, lon, max_distance=500))
 
         for g in near_grids:
-            pois.extend(g.get_nearest_poi(lat, lon, max_distance=1000))
+            pois.extend(g.get_nearest_poi(lat, lon, max_distance=500))
 
         return len(pois)
 
@@ -203,5 +224,7 @@ class Location():
 
 if __name__ == '__main__':
 
-    print(distance(41.941562, -87.664011, 41.942562, -87.664011))
-    print(distance(41.941562, -87.664011, 41.941562, -87.665011))
+    # print(distance(41.941562, -87.664011, 41.942562, -87.664011))
+    # print(distance(41.941562, -87.664011, 41.941562, -87.665011))
+    l = Location()
+    print(l.categories)

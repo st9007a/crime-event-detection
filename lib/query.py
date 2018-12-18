@@ -14,7 +14,8 @@ FEATURE_COLUMNS = [
 ]
 
 UPDATE_COLUMNS = [
-    'police_station_density', 'population_density',
+    # 'police_station_density',
+    'population_density',
 ]
 
 def reset_grid_size(grid_size):

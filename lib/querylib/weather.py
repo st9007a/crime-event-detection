@@ -15,7 +15,10 @@ class Weather():
         self.table = pd.read_csv('%s/Weather.csv' % _file_dir, delimiter=',')
         self.table = self.table.set_index('datetime')
 
-        self.desc = list(set(self.table['weather_description']))
+        self.desc = []
+        for idx, row in self.table.iterrows():
+            if row['weather_description'] not in self.desc:
+                self.desc.append(row['weather_description'])
 
         self.handler = {
             'humidity': self.get_humidity,
@@ -60,3 +63,4 @@ class Weather():
 if __name__ == '__main__':
 
     w = Weather()
+    print(w.desc)
