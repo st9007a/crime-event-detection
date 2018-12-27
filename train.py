@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import os
 from pprint import pprint
 import pickle
+import sys
 
 import numpy as np
 import pandas as pd
@@ -22,6 +24,14 @@ numerical_features = [
     'wind_speed',
     'population_density',
     'night_spot_density',
+    'event_density',
+    'residence_density',
+    'art_enter_density',
+    'college_density',
+    'outdoors_density',
+    'professional_density',
+    'shop_density',
+    'travel_density',
     'category',
     'time_slot',
     'weather_description',
@@ -48,7 +58,7 @@ def build_features(df):
 
 def get_features(pos, neg1, neg2, seed=0):
 
-    new_neg1 = neg1.sample(frac=0.3, random_state=seed)
+    new_neg1 = neg1.sample(frac=0.2, random_state=seed)
 
     res = pd.concat([pos, new_neg1, neg2])
     train_set = res[res['set'] == 'train']
@@ -62,8 +72,9 @@ if __name__ == '__main__':
     pos = pd.read_csv('./data/positive_samples.csv', delimiter=',')
     neg1 = pd.read_csv('./data/negative1_samples.csv', delimiter=',')
     neg2 = pd.read_csv('./data/negative2_samples.csv', delimiter=',')
+    path = sys.argv[1]
 
-    for i in range(9):
+    for i in range(10):
         x_train, x_valid, x_test, y_train, y_valid, y_test = get_features(pos, neg1, neg2, seed=i)
 
         y_train = np.where(y_train > 0, 1, 0)
@@ -80,16 +91,12 @@ if __name__ == '__main__':
             'objective': 'binary:logistic',
             'eval_metric': 'error',
             'silent': 1,
-            'seed': 1,
         }
 
-        bst = xgb.train(params, dtrain, num_boost_round=200, evals=[(dvalid, 'eval')], early_stopping_rounds=10)
+        bst = xgb.train(params, dtrain, num_boost_round=500, evals=[(dvalid, 'eval')], early_stopping_rounds=10)
 
-        pred = bst.predict(dtest, ntree_limit=bst.best_ntree_limit)
-        print(pred)
-        pred = np.where(pred > 0.5, 1, 0)
-        pprint(bst.get_score())
-        print(classification_report(y_test, pred))
+        if not os.path.isdir(path):
+            os.makedirs(path)
 
-        with open('models/model.%d.pkl' % i, 'wb') as p:
+        with open('%s/model.%d.pkl' % (path, i), 'wb') as p:
             pickle.dump(bst, p, protocol=pickle.HIGHEST_PROTOCOL)

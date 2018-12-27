@@ -51,6 +51,14 @@ class Location():
             'population_density': self.get_population_density,
             'police_station_density': self.get_police_station_density,
             'night_spot_density': self.get_night_spot_density,
+            'event_density': self.get_event_density,
+            'residence_density': self.get_residence_density,
+            'art_enter_density': self.get_art_enter_density,
+            'college_density': self.get_college_density,
+            'outdoors_density': self.get_outdoors_density,
+            'professional_density': self.get_professional_density,
+            'shop_density': self.get_shop_density,
+            'travel_density': self.get_travel_density,
         }
 
         self.grid_size = grid_size
@@ -193,10 +201,10 @@ class Location():
 
         return num
 
-    def get_night_spot_density(self, lat, lon):
+    def get_density(self, lat, lon, category):
 
         def filter_fn(el):
-            return self.category_map[el[1]]['root'] == 'Nightlife Spot'
+            return self.category_map[el[1]]['root'] == category
 
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)
         pois = []
@@ -207,6 +215,33 @@ class Location():
             pois.extend(g.get_nearest_poi(lat, lon, max_distance=500, filter_fn=filter_fn))
 
         return len(pois)
+
+    def get_night_spot_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Nightlife Spot')
+
+    def get_event_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Event')
+
+    def get_residence_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Residence')
+
+    def get_art_enter_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Arts & Entertainment')
+
+    def get_college_density(self, lat, lon):
+        return self.get_density(lat, lon, 'College & University')
+
+    def get_outdoors_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Outdoors & Recreation')
+
+    def get_professional_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Professional & Other Places')
+
+    def get_shop_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Shop & Service')
+
+    def get_travel_density(self, lat, lon):
+        return self.get_density(lat, lon, 'Travel & Transport')
 
     def get_population_density(self, lat, lon):
         grid, near_grids = self.get_grid(lat, lon, return_near_grids=True)

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from datetime import datetime
 import pickle
+import sys
+from glob import glob
 
 import numpy as np
 import pandas as  pd
@@ -16,6 +18,14 @@ numerical_features = [
     'wind_speed',
     'population_density',
     'night_spot_density',
+    'event_density',
+    'residence_density',
+    'art_enter_density',
+    'college_density',
+    'outdoors_density',
+    'professional_density',
+    'shop_density',
+    'travel_density',
     'category',
     'time_slot',
     'weather_description',
@@ -32,9 +42,10 @@ if __name__ == '__main__':
         lines = f.readlines()
 
     models = []
+    model_path = sys.argv[1]
 
-    for i in range(9):
-        with open('models/model.%d.pkl' % i, 'rb') as p:
+    for path in glob('%s/*.pkl' % model_path):
+        with open(path, 'rb') as p:
             bst = pickle.load(p)
         models.append(bst)
 
@@ -61,6 +72,14 @@ if __name__ == '__main__':
                               'wind_speed',
                               'population_density',
                               'night_spot_density',
+                              'event_density',
+                              'residence_density',
+                              'art_enter_density',
+                              'college_density',
+                              'outdoors_density',
+                              'professional_density',
+                              'shop_density',
+                              'travel_density',
                               'category',
                               'time_slot',
                               'weather_description',
@@ -78,14 +97,11 @@ if __name__ == '__main__':
     prediction = []
 
     for i in range(0, samples.shape[0], 6):
-        p = 0
         c = 0
         for j in range(6):
             if pred_proba[i + j] > 0.5:
                 c += 1
-        if c >= 1:
-            p = 1
-        prediction.append(p)
+        prediction.append(1 if c >= 2 else 0)
 
     print(prediction)
 
@@ -104,6 +120,6 @@ if __name__ == '__main__':
         lines[i] = lines[i].rstrip('\n') + str(prediction[ptr]) + '\n'
         ptr += 1
 
-    with open('result2.csv', 'w') as f:
+    with open('result.csv', 'w') as f:
         for line in lines:
             f.write(line)

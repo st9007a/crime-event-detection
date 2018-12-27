@@ -33,7 +33,7 @@ with open('../data/positive.csv', newline='') as crimeFile:
     # print(has_crime['01/0141.918-87.729'])
 
     for key, crime in has_crime.items():
-        arr = range(-5, 6)
+        arr = range(-3, 4)
         for i in arr:
             for j in arr:
                 date_location = key[:5] + str(float(crime['location']['Latitude']) + i * 0.001)[:6] + str(float(crime['location']['Longitude']) + j * 0.001)[:7]

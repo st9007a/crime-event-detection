@@ -45,7 +45,7 @@ with open('../data/Crimes2016.csv', newline='') as crimeFile:
     writer.writeheader()
     count = 0
     for row in rows:
-        if primary_type[row['Primary Type']] <= 100:
+        if primary_type[row['Primary Type']] <= 1000:
             continue
         hour = int(row['Date'][-11:-9])
         if 'PM' in row['Date']:
